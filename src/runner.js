@@ -155,9 +155,29 @@ define(function (require, exports) {
 
         if (args.fg){
             let serializedGraph = cg.fg.graph.serialize();
+            let result = {};
             serializedGraph.links.forEach((link) => {
-                console.log(link.source, "=>", link.target);
+                //console.log(link.source, "=>", link.target);
+                result[link.source] = link.target;
             });
+            
+            if (this.args.output !== null) {
+                let filename = this.args.output[0];
+                
+                if (!filename.endsWith(".json")) {
+                    filename += "JSFG.json";
+                }
+                fs.writeFileSync(filename, JSON.stringify(result, null, 2), function (err) {
+                    if (err) {
+                        let transformStream = JSONStream.stringify();
+                        let outputStream = fs.createWriteStream(filename);
+                        transformStream.pipe(outputStream);
+                        result.forEach(transformStream.write);
+                        transformStream.end();
+                    }
+                });
+
+            }
         }
 
         if (args.countCB)
@@ -177,7 +197,7 @@ define(function (require, exports) {
             if (this.args.output !== null) {
                 let filename = this.args.output[0];
                 if (!filename.endsWith(".json")) {
-                    filename += ".json";
+                    filename += "JSSCG.json";
                 }
                 fs.writeFile(filename, JSON.stringify(result, null, 2), function (err) {
                     if (err) {
