@@ -110,8 +110,9 @@ if (args.filter !== null) {
         JCG.setFilter(filter);
     }
 }
-JCG.setConsoleOutput(true);
+// Madhurima_ACG
+JCG.setConsoleOutput(false);
 /*
 * The build return with a JSON of result.
- */
+*/
 JCG.build();

@@ -28,7 +28,9 @@ define(function (require, exports) {
         fg = fg || new graph.FlowGraph();
 
         var changed;
+        var cnt = 0;
         do {
+            console.log("Iteration : ", cnt)
             changed = false;
 
             var reach = dftc.reachability(fg, function (nd) {
@@ -90,7 +92,7 @@ define(function (require, exports) {
                 });
             });
         } while (changed); // until fixpoint
-
+        console.log("Total Iterations :", cnt);
         return fg;
     }
 

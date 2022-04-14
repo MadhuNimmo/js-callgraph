@@ -227,7 +227,9 @@ function encFuncName(encFunc) {
 
 /* Pretty-print position. */
 function ppPos(nd) {
-    return basename(nd.attr.enclosingFile) + "@" + nd.loc.start.line + ":" + nd.range[0] + "-" + nd.range[1];
+  //Madhurima_ACG
+  //return basename(nd.attr.enclosingFile) + "@" + nd.loc.start.line + ":" + nd.range[0] + "-" + nd.range[1];
+  return (nd.attr.enclosingFile + "@" + nd.loc.start.line + ":" + nd.range[0] + "-" + nd.range[1]);
 }
 
 /* Build as AST from a collection of source files */

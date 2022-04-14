@@ -90,13 +90,20 @@ define(function (require, exports) {
         return edge;
     };
 
-    let pp = function (v) {
-        if (v.type === 'CalleeVertex')
-            return '\'' + astutil.encFuncName(v.call.attr.enclosingFunction) + '\' (' + astutil.ppPos(v.call) + ')';
+    let pp = function (v, encInfo = false) {
+        if (v.type === 'CalleeVertex') {
+            //return '\'' + astutil.encFuncName(v.call.attr.enclosingFunction) + '\' (' + astutil.ppPos(v.call) + ')';
+            if(encInfo && v.call.attr.enclosingFunction){
+                return [astutil.ppPos(v.call.attr.enclosingFunction),astutil.ppPos(v.call)];
+            }
+            return astutil.ppPos(v.call);
+        }
         if (v.type === 'FuncVertex')
-            return '\'' + astutil.funcname(v.func) + '\' (' + astutil.ppPos(v.func) + ')';
+            //return '\'' + astutil.funcname(v.func) + '\' (' + astutil.ppPos(v.func) + ')';
+            return astutil.ppPos(v.func);
         if (v.type === 'NativeVertex')
-            return '\'' + v.name + '\' (Native)';
+            //return "'" + v.name + "' (Native)";
+            return '' + v.name + ' (Native)';
         throw new Error("strange vertex: " + v);
     };
 
@@ -189,8 +196,28 @@ define(function (require, exports) {
             });
         if (args.cg) {
             let result = [];
+            // Madhurima_ACG
+            let resultObj = {};
             cg.edges.iter(function (call, fn) {
                 result.push(buildBinding(call, fn));
+                if(args.encFuncInfo){
+                    var [encFunc,caller] = pp(call,true);
+                    var callee = pp(fn);
+                    if (!(encFunc in resultObj)) {
+                        resultObj[encFunc] = {};
+                    }
+                    if (!(caller in resultObj[encFunc])) {
+                        resultObj[encFunc][caller] = [];
+                    }
+                    resultObj[encFunc][caller].push(callee);
+                }else{
+                    var caller = pp(call);
+                    var callee = pp(fn);
+                    if (!resultObj[caller]) {
+                        resultObj[caller] = [];
+                    }
+                    resultObj[caller].push(callee);
+                }
                 if (consoleOutput)
                     console.log(pp(call) + " -> " + pp(fn));
             });
