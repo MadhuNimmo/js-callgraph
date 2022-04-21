@@ -68,7 +68,7 @@ function visitWithState(root, visitor) {
  * nodes, and fill in `enclosingFunction` and `enclosingFile`
  * attributes. */
 function init(root) {
-    var enclosingFunction = null, enclosingFile = null;
+    var enclosingFunction = null, enclosingFile = null, encFileLocRng = null;
     // global collections containing all functions and all call sites
     root.attr.functions = [];
     root.attr.calls = [];
@@ -80,9 +80,11 @@ function init(root) {
             nd.attr.enclosingFunction = enclosingFunction;
         if (enclosingFile)
             nd.attr.enclosingFile = enclosingFile;
+            nd.attr.encFileLocRng = encFileLocRng;
 
         if (nd.type === 'Program') {
             enclosingFile = nd.attr.filename;
+            encFileLocRng = nd.attr.filename + "@" + nd.loc.start.line + ":" + nd.range[0] + "-" + nd.range[1];
         }
 
         /* Method Definition (Case 1)

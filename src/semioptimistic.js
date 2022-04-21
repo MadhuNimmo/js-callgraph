@@ -29,6 +29,11 @@ define(function (require, exports) {
 
         var changed;
         var cnt = 0;
+        var cg;
+
+        cg = callgraph.extractCG(ast, fg)
+        callgraph.writeCG(cg, 0)
+
         do {
             console.log("Iteration : ", cnt)
             changed = false;
@@ -91,6 +96,9 @@ define(function (require, exports) {
                     }
                 });
             });
+          cnt++;
+          cg = callgraph.extractCG(ast, fg)
+          callgraph.writeCG(cg, cnt)
         } while (changed); // until fixpoint
         console.log("Total Iterations :", cnt);
         return fg;

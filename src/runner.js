@@ -95,8 +95,10 @@ define(function (require, exports) {
             //return '\'' + astutil.encFuncName(v.call.attr.enclosingFunction) + '\' (' + astutil.ppPos(v.call) + ')';
             if(encInfo && v.call.attr.enclosingFunction){
                 return [astutil.ppPos(v.call.attr.enclosingFunction),astutil.ppPos(v.call)];
+            }else{
+                return [v.call.attr.encFileLocRng,astutil.ppPos(v.call)]
             }
-            return astutil.ppPos(v.call);
+            //return astutil.ppPos(v.call);
         }
         if (v.type === 'FuncVertex')
             //return '\'' + astutil.funcname(v.func) + '\' (' + astutil.ppPos(v.func) + ')';
@@ -226,7 +228,7 @@ define(function (require, exports) {
                 if (!filename.endsWith(".json")) {
                     filename += "JSSCG.json";
                 }
-                fs.writeFile(filename, JSON.stringify(result, null, 2), function (err) {
+                fs.writeFile(filename, JSON.stringify(resultObj, null, 2), function (err) {
                     if (err) {
                         /*
                         When happened something wrong (usually out of memory when we want print
@@ -279,5 +281,6 @@ define(function (require, exports) {
     };
 
     exports.build = build;
+    exports.pp = pp;
     return exports;
 });

@@ -78,6 +78,14 @@ argParser.addArgument(
     }
 );
 
+argParser.addArgument(
+  ['--encFuncInfo'],
+  {
+      nargs: 0,
+      help: 'Include enclosing Function Information to the CG'
+  }
+);
+
 let r = argParser.parseKnownArgs();
 const args = r[0];
 const inputList = r[1];
